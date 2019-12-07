@@ -1,0 +1,34 @@
+version: "3.7"
+
+services:
+  
+  redis:
+    build: ./infrastructure/docker/redis
+    ports:
+      - "3306:3306"
+    env_file:
+      - ./infrastructure/environments/production.env
+    networks:
+      - code-network
+
+  http:
+    build: ./infrastructure/docker/nginx
+    ports:
+      - "8085:80"
+    env_file:
+      - ./infrastructure/environments/production.env
+    restart: always
+    networks:
+      - code-network
+
+  php:
+    build: ./infrastructure/docker/php
+    env_file:
+      - ./infrastructure/environments/production.env
+    restart: always
+    networks:
+      - code-network
+
+networks:
+    code-network:
+        driver: bridge
